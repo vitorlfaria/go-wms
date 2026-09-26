@@ -9,13 +9,13 @@ import (
 
 type MemoryProductRepository struct {
 	mu       sync.RWMutex
-	products map[string]*domain.Product
+	Products map[string]*domain.Product
 }
 
 func NewMemoryProductRepository() *MemoryProductRepository {
 	return &MemoryProductRepository{
 		mu:       sync.RWMutex{},
-		products: make(map[string]*domain.Product),
+		Products: make(map[string]*domain.Product),
 	}
 }
 
@@ -23,7 +23,7 @@ func (pr *MemoryProductRepository) GetByID(ctx context.Context, id string) (*dom
 	pr.mu.RLock()
 	defer pr.mu.RUnlock()
 
-	product := pr.products[id]
+	product := pr.Products[id]
 	if product == nil {
 		return nil, domain.ErrProductNotFound
 	}
@@ -35,11 +35,11 @@ func (pr *MemoryProductRepository) Update(ctx context.Context, product *domain.P
 	pr.mu.Lock()
 	defer pr.mu.Unlock()
 
-	p := pr.products[product.ID]
+	p := pr.Products[product.ID]
 	if p == nil {
 		return domain.ErrProductNotFound
 	}
 
-	pr.products[product.ID] = product
+	pr.Products[product.ID] = product
 	return nil
 }
